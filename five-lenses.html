@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>five lenses on one province's behaviour</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --insight-black: #1A2B30;
+    --system-white: #FFFCFA;
+    --anchor-green: #5F9C7B;
+    --purple-axis: #A2A4D8;
+    --datum-pink: #E8B9C4;
+    --metric-blue: #9ECFD9;
+    --vector-orange: #D97340;
+    --signal-yellow: #E2C84D;
+    --measured-purple: #452B63;
+    --fg-secondary: #3B4A4F;
+    --fg-tertiary: #6E797D;
+    --fg-muted: #A6ADAF;
+    --bg-subtle: #F2F1EE;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Red Hat Display", "Segoe UI", sans-serif;
+    background: var(--system-white);
+    color: var(--insight-black);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .section {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 72px 32px 88px;
+  }
+
+  /* ── header ───────────────────────────────── */
+  .eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--fg-tertiary);
+    margin-bottom: 14px;
+  }
+
+  .headline {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.12;
+    max-width: 560px;
+  }
+
+  .headline .full-stop { color: var(--vector-orange); }
+
+  .hint {
+    margin-top: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--fg-tertiary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hint .hint-lens {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2.5px solid var(--vector-orange);
+    flex: none;
+    animation: hintPulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes hintPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.25); opacity: 0.55; }
+  }
+
+  /* ── grid ─────────────────────────────────── */
+  .lens-grid {
+    margin-top: 44px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  @media (max-width: 920px) { .lens-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .lens-grid { grid-template-columns: 1fr; } }
+
+  /* ── card ─────────────────────────────────── */
+  .lens-card {
+    position: relative;
+    background: var(--system-white);
+    border: 1px solid #E4E1DC;
+    border-radius: 14px;
+    padding: 28px 28px 32px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.35s ease, transform 0.35s ease;
+    overflow: hidden;
+  }
+
+  /* cursor-following glass highlight */
+  .lens-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      280px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, var(--lens) 9%, transparent),
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  .lens-card.focused { border-color: var(--lens); transform: translateY(-3px); }
+  .lens-card.focused::before { opacity: 1; }
+
+  .card-number {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--fg-tertiary);
+  }
+
+  /* ── the lens itself ──────────────────────── */
+  .lens {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    margin: 18px 0 22px;
+  }
+
+  .lens .disc {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--lens);
+    border: 0 solid var(--lens);
+    transition: inset 0.4s cubic-bezier(0.34, 1.4, 0.5, 1), border-width 0.4s cubic-bezier(0.34, 1.4, 0.5, 1), background-color 0.4s ease;
+  }
+
+  /* focused: solid disc resolves into an aperture ring with a centred pupil */
+  .lens-card.focused .lens .disc {
+    inset: -2px;
+    border-width: 5px;
+    background: transparent;
+  }
+
+  .lens .pupil {
+    position: absolute;
+    inset: 50%;
+    border-radius: 50%;
+    background: var(--lens);
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    transition: width 0.4s cubic-bezier(0.34, 1.4, 0.5, 1) 0.05s, height 0.4s cubic-bezier(0.34, 1.4, 0.5, 1) 0.05s;
+  }
+
+  .lens-card.focused .lens .pupil { width: 18px; height: 18px; }
+
+  /* expanding focus ring on engage */
+  .lens .ping {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid var(--lens);
+    opacity: 0;
+    transform: scale(1);
+    pointer-events: none;
+  }
+
+  .lens-card.focused .lens .ping { animation: ping 0.7s ease-out forwards; }
+
+  @keyframes ping {
+    0% { opacity: 0.6; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.9); }
+  }
+
+  /* ── copy ─────────────────────────────────── */
+  .card-title {
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .card-bullets {
+    list-style: none;
+    filter: blur(3px);
+    opacity: 0.4;
+    transition: filter 0.45s ease, opacity 0.45s ease;
+  }
+
+  .lens-card.focused .card-bullets { filter: blur(0); opacity: 1; }
+
+  .card-bullets li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.45;
+    color: var(--fg-secondary);
+    margin-bottom: 11px;
+  }
+
+  .card-bullets li:last-child { margin-bottom: 0; }
+
+  .card-bullets li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--vector-orange);
+  }
+
+  /* ── tail line ────────────────────────────── */
+  .tail {
+    margin-top: 40px;
+    font-size: 14px;
+    color: var(--fg-tertiary);
+  }
+
+  .tail strong { font-weight: 700; color: var(--insight-black); }
+
+  /* ── reduced motion ───────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .lens-card, .lens .disc, .lens .pupil, .card-bullets { transition: none; }
+    .lens .ping, .hint .hint-lens { animation: none; }
+    .card-bullets { filter: none; opacity: 0.55; }
+  }
+</style>
+</head>
+<body>
+
+<section class="section" aria-label="inside the report">
+  <p class="eyebrow">— inside the report</p>
+  <h2 class="headline">five lenses on one province's behaviour<span class="full-stop">.</span></h2>
+  <p class="hint"><span class="hint-lens" aria-hidden="true"></span><span data-hint>hover each lens to bring its theme into focus</span></p>
+
+  <div class="lens-grid">
+
+    <article class="lens-card" style="--lens: var(--metric-blue);" tabindex="0" role="button" aria-pressed="false">
+      <p class="card-number">01</p>
+      <div class="lens" aria-hidden="true"><span class="ping"></span><span class="disc"></span><span class="pupil"></span></div>
+      <h3 class="card-title">platform behaviour</h3>
+      <ul class="card-bullets">
+        <li>which platforms people use, and how often</li>
+        <li>when they're most active on each</li>
+        <li>what they go there for — news, entertainment, shopping, community</li>
+      </ul>
+    </article>
+
+    <article class="lens-card" style="--lens: var(--vector-orange);" tabindex="0" role="button" aria-pressed="false">
+      <p class="card-number">02</p>
+      <div class="lens" aria-hidden="true"><span class="ping"></span><span class="disc"></span><span class="pupil"></span></div>
+      <h3 class="card-title">content that actually works</h3>
+      <ul class="card-bullets">
+        <li>what makes content land: humour, authenticity, relevance</li>
+        <li>the role of community, storytelling, and shared values</li>
+        <li>what people want to see from brands and companies</li>
+      </ul>
+    </article>
+
+    <article class="lens-card" style="--lens: var(--anchor-green);" tabindex="0" role="button" aria-pressed="false">
+      <p class="card-number">03</p>
+      <div class="lens" aria-hidden="true"><span class="ping"></span><span class="disc"></span><span class="pupil"></span></div>
+      <h3 class="card-title">brand engagement &amp; followership</h3>
+      <ul class="card-bullets">
+        <li>what people want from a brand account</li>
+        <li>what drives a follow — or an unfollow</li>
+        <li>how brand attitudes vary across audiences</li>
+      </ul>
+    </article>
+
+    <article class="lens-card" style="--lens: var(--measured-purple);" tabindex="0" role="button" aria-pressed="false">
+      <p class="card-number">04</p>
+      <div class="lens" aria-hidden="true"><span class="ping"></span><span class="disc"></span><span class="pupil"></span></div>
+      <h3 class="card-title">influencers &amp; credibility</h3>
+      <ul class="card-bullets">
+        <li>which sources people find most credible</li>
+        <li>what they look for in influencers and creators</li>
+        <li>how trust differs across friends, brands, and paid voices</li>
+      </ul>
+    </article>
+
+    <article class="lens-card" style="--lens: var(--signal-yellow);" tabindex="0" role="button" aria-pressed="false">
+      <p class="card-number">05</p>
+      <div class="lens" aria-hidden="true"><span class="ping"></span><span class="disc"></span><span class="pupil"></span></div>
+      <h3 class="card-title">audience profiles &amp; demographics</h3>
+      <ul class="card-bullets">
+        <li>how behaviour varies by age, gender, and region</li>
+        <li>differences by generation and Indigenous ancestry</li>
+        <li>where key audiences diverge in use, trust, and taste</li>
+      </ul>
+    </article>
+
+  </div>
+
+  <p class="tail"><strong>One study, five ways in.</strong> Every lens draws on the same province-wide base (n=1,216), so the themes read as one connected picture — not five separate reports.</p>
+</section>
+
+<script>
+(function () {
+  var cards = document.querySelectorAll(".lens-card");
+  var hint = document.querySelector("[data-hint]");
+  var touch = window.matchMedia("(hover: none)").matches;
+
+  if (touch && hint) hint.textContent = "tap each lens to bring its theme into focus";
+
+  function setFocus(card, on) {
+    card.classList.toggle("focused", on);
+    card.setAttribute("aria-pressed", on ? "true" : "false");
+  }
+
+  function clearAll(except) {
+    cards.forEach(function (c) { if (c !== except) setFocus(c, false); });
+  }
+
+  cards.forEach(function (card) {
+    // pointer-following glass highlight
+    card.addEventListener("pointermove", function (e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", (e.clientX - r.left) + "px");
+      card.style.setProperty("--my", (e.clientY - r.top) + "px");
+    });
+
+    if (touch) {
+      card.addEventListener("click", function () {
+        var on = !card.classList.contains("focused");
+        clearAll(card);
+        setFocus(card, on);
+      });
+    } else {
+      card.addEventListener("pointerenter", function () { setFocus(card, true); });
+      card.addEventListener("pointerleave", function () { setFocus(card, false); });
+    }
+
+    // keyboard
+    card.addEventListener("focus", function () { setFocus(card, true); });
+    card.addEventListener("blur", function () { setFocus(card, false); });
+    card.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setFocus(card, !card.classList.contains("focused"));
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
