@@ -20,214 +20,88 @@
     --fg-secondary: #3B4A4F;
     --fg-tertiary: #6E797D;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html, body { background: #FFFCFA; }
-
+  html, body { background: #FFFCFA; height: 100%; }
   body {
     font-family: "Red Hat Display", "Segoe UI", sans-serif;
     color: var(--insight-black);
     -webkit-font-smoothing: antialiased;
     overflow: hidden;
-  }
-
-  .switcher {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 12px 20px 20px;
-  }
-
-  /* ── lens row ─────────────────────────────── */
-  .lens-row {
     display: flex;
-    justify-content: center;
-    gap: clamp(18px, 5vw, 44px);
-    padding: 10px 0 6px;
-  }
-
-  .lens-btn {
-    appearance: none;
-    background: none;
-    border: 0;
-    cursor: pointer;
-    font-family: inherit;
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 9px;
-    outline: none;
+    justify-content: center;
   }
-
-  .lens-btn .num {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: var(--fg-tertiary);
+  .switcher { width: 100%; max-width: 680px; margin: 0 auto; padding: 16px 20px; }
+  .lens-row { display: flex; justify-content: center; gap: clamp(16px, 5vw, 40px); padding-bottom: 4px; }
+  .lens-btn {
+    appearance: none; background: none; border: 0; cursor: pointer; font-family: inherit;
+    display: flex; flex-direction: column; align-items: center; gap: 8px; outline: none;
   }
-
-  .lens-btn .lens {
-    position: relative;
-    width: clamp(36px, 9vw, 48px);
-    height: clamp(36px, 9vw, 48px);
-  }
-
+  .lens-btn .num { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: var(--fg-tertiary); }
+  .lens-btn .lens { position: relative; width: clamp(34px, 8vw, 44px); height: clamp(34px, 8vw, 44px); }
   .lens-btn .disc {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: var(--lens);
-    border: 0 solid var(--lens);
-    transition: inset 0.4s cubic-bezier(0.34, 1.4, 0.5, 1),
-                border-width 0.4s cubic-bezier(0.34, 1.4, 0.5, 1),
-                background-color 0.4s ease,
-                opacity 0.3s ease;
+    position: absolute; inset: 0; border-radius: 50%; background: var(--lens); border: 0 solid var(--lens);
+    transition: inset 0.4s cubic-bezier(0.34,1.4,0.5,1), border-width 0.4s cubic-bezier(0.34,1.4,0.5,1), background-color 0.4s ease, opacity 0.3s ease;
     opacity: 0.45;
   }
-
-  .lens-btn:hover .disc,
-  .lens-btn:focus-visible .disc { opacity: 1; }
-
+  .lens-btn:hover .disc, .lens-btn:focus-visible .disc { opacity: 1; }
   .lens-btn .pupil {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background: var(--lens);
-    width: 0;
-    height: 0;
-    transition: width 0.4s cubic-bezier(0.34, 1.4, 0.5, 1) 0.05s,
-                height 0.4s cubic-bezier(0.34, 1.4, 0.5, 1) 0.05s;
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); border-radius: 50%; background: var(--lens);
+    width: 0; height: 0;
+    transition: width 0.4s cubic-bezier(0.34,1.4,0.5,1) 0.05s, height 0.4s cubic-bezier(0.34,1.4,0.5,1) 0.05s;
   }
-
-  .lens-btn[aria-selected="true"] .disc {
-    inset: -2px;
-    border-width: 4px;
-    background: transparent;
-    opacity: 1;
-  }
-
-  .lens-btn[aria-selected="true"] .pupil {
-    width: clamp(12px, 3vw, 16px);
-    height: clamp(12px, 3vw, 16px);
-  }
-
+  .lens-btn[aria-selected="true"] .disc { inset: -2px; border-width: 4px; background: transparent; opacity: 1; }
+  .lens-btn[aria-selected="true"] .pupil { width: clamp(11px, 2.8vw, 15px); height: clamp(11px, 2.8vw, 15px); }
   .lens-btn:focus-visible .lens::after {
-    content: "";
-    position: absolute;
-    inset: -8px;
-    border-radius: 50%;
-    border: 2px dashed var(--fg-tertiary);
+    content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 2px dashed var(--fg-tertiary);
   }
-
-  /* ── panel ────────────────────────────────── */
   .panel-frame {
-    position: relative;
-    margin-top: 14px;
-    border: 1px solid #E4E1DC;
-    border-top: 3px solid var(--lens, var(--metric-blue));
-    border-radius: 14px;
-    background: var(--system-white);
-    padding: 26px 30px 28px;
-    min-height: 248px;
+    position: relative; margin-top: 14px; border: 1px solid #E4E1DC; border-top: 3px solid var(--lens, var(--metric-blue));
+    border-radius: 14px; background: var(--system-white); padding: 22px 26px; height: 210px;
     transition: border-top-color 0.4s ease;
   }
-
   .panel {
-    position: absolute;
-    inset: 26px 30px 28px;
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.35s ease, transform 0.35s ease;
-    pointer-events: none;
+    position: absolute; inset: 22px 26px; opacity: 0; transform: translateY(6px);
+    transition: opacity 0.35s ease, transform 0.35s ease; pointer-events: none;
   }
-
-  .panel.active {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-
-  .panel-title {
-    font-size: clamp(19px, 4vw, 23px);
-    font-weight: 700;
-    letter-spacing: -0.015em;
-    line-height: 1.2;
-    margin-bottom: 15px;
-  }
-
+  .panel.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .panel-title { font-size: clamp(18px, 3.6vw, 22px); font-weight: 700; letter-spacing: -0.015em; line-height: 1.2; margin-bottom: 13px; }
   .panel ul { list-style: none; }
-
   .panel li {
-    position: relative;
-    padding-left: 20px;
-    font-size: 15px;
-    line-height: 1.45;
-    color: var(--fg-secondary);
-    margin-bottom: 10px;
+    position: relative; padding-left: 19px; font-size: clamp(13.5px, 2.6vw, 15px); line-height: 1.4;
+    color: var(--fg-secondary); margin-bottom: 9px;
   }
-
   .panel li:last-child { margin-bottom: 0; }
-
   .panel li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 7px;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
+    content: ""; position: absolute; left: 0; top: 6px; width: 7px; height: 7px; border-radius: 50%;
     background: var(--lens-accent, var(--vector-orange));
   }
-
-  .hint {
-    margin-top: 12px;
-    text-align: center;
-    font-size: 12.5px;
-    color: var(--fg-tertiary);
-  }
-
-  @media (max-width: 480px) {
-    .switcher { padding: 8px 12px 16px; }
-    .panel-frame { padding: 22px 20px 24px; min-height: 300px; }
-    .panel { inset: 22px 20px 24px; }
-  }
-
+  .hint { margin-top: 11px; text-align: center; font-size: 12px; color: var(--fg-tertiary); }
   @media (prefers-reduced-motion: reduce) {
     .lens-btn .disc, .lens-btn .pupil, .panel, .panel-frame { transition: none; }
   }
 </style>
 </head>
 <body>
-
 <div class="switcher">
-
   <div class="lens-row" role="tablist" aria-label="five lenses on Saskatchewan's social media behaviour">
     <button class="lens-btn" style="--lens: var(--metric-blue);" role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1">
-      <span class="num">01</span>
-      <span class="lens" aria-hidden="true"><span class="disc"></span><span class="pupil"></span></span>
+      <span class="num">01</span><span class="lens" aria-hidden="true"><span class="disc"></span><span class="pupil"></span></span>
     </button>
     <button class="lens-btn" style="--lens: var(--vector-orange);" role="tab" id="tab-2" aria-selected="false" aria-controls="panel-2" tabindex="-1">
-      <span class="num">02</span>
-      <span class="lens" aria-hidden="true"><span class="disc"></span><span class="pupil"></span></span>
+      <span class="num">02</span><span class="lens" aria-hidden="true"><span class="disc"></span><span class="pupil"></span></span>
     </button>
     <button class="lens-btn" style="--lens: var(--anchor-green);" role="tab" id="tab-3" aria-selected="false" aria-controls="panel-3" tabindex="-1">
-      <span class="num">03</span>
-      <span class="lens" aria-hidden="true"><span class="disc"></span><span class="pupil"></span></span>
+      <span class="num">03</span><span class="lens" aria-hidden="true"><span class="disc"></span><span class="pupil"></span></span>
     </button>
     <button class="lens-btn" style="--lens: var(--measured-purple);" role="tab" id="tab-4" aria-selected="false" aria-controls="panel-4" tabindex="-1">
-      <span class="num">04</span>
-      <span class="lens" aria-hidden="true"><span class="disc"></span><span class="pupil"></span></span>
+      <span class="num">04</span><span class="lens" aria-hidden="true"><span class="disc"></span><span class="pupil"></span></span>
     </button>
     <button class="lens-btn" style="--lens: var(--signal-yellow);" role="tab" id="tab-5" aria-selected="false" aria-controls="panel-5" tabindex="-1">
-      <span class="num">05</span>
-      <span class="lens" aria-hidden="true"><span class="disc"></span><span class="pupil"></span></span>
+      <span class="num">05</span><span class="lens" aria-hidden="true"><span class="disc"></span><span class="pupil"></span></span>
     </button>
   </div>
-
   <div class="panel-frame" id="panel-frame">
-
     <div class="panel active" id="panel-1" role="tabpanel" aria-labelledby="tab-1">
       <h3 class="panel-title">platform behaviour</h3>
       <ul>
@@ -236,7 +110,6 @@
         <li>what they go there for — news, entertainment, shopping, community</li>
       </ul>
     </div>
-
     <div class="panel" id="panel-2" role="tabpanel" aria-labelledby="tab-2" hidden>
       <h3 class="panel-title">content that actually works</h3>
       <ul>
@@ -245,7 +118,6 @@
         <li>what people want to see from brands and companies</li>
       </ul>
     </div>
-
     <div class="panel" id="panel-3" role="tabpanel" aria-labelledby="tab-3" hidden>
       <h3 class="panel-title">brand engagement &amp; followership</h3>
       <ul>
@@ -254,7 +126,6 @@
         <li>how brand attitudes vary across audiences</li>
       </ul>
     </div>
-
     <div class="panel" id="panel-4" role="tabpanel" aria-labelledby="tab-4" hidden>
       <h3 class="panel-title">influencers &amp; credibility</h3>
       <ul>
@@ -263,7 +134,6 @@
         <li>how trust differs across friends, brands, and paid voices</li>
       </ul>
     </div>
-
     <div class="panel" id="panel-5" role="tabpanel" aria-labelledby="tab-5" hidden>
       <h3 class="panel-title">audience profiles &amp; demographics</h3>
       <ul>
@@ -272,63 +142,44 @@
         <li>where key audiences diverge in use, trust, and taste</li>
       </ul>
     </div>
-
   </div>
-
   <p class="hint" data-hint>click a lens to switch themes</p>
-
 </div>
-
 <script>
 (function () {
   var tabs = Array.prototype.slice.call(document.querySelectorAll(".lens-btn"));
   var panels = Array.prototype.slice.call(document.querySelectorAll(".panel"));
   var frame = document.getElementById("panel-frame");
-  var lensColours = ["var(--metric-blue)", "var(--vector-orange)", "var(--anchor-green)", "var(--measured-purple)", "var(--signal-yellow)"];
-  var current = 0;
-  var interacted = false;
+  var lensColours = ["var(--metric-blue)","var(--vector-orange)","var(--anchor-green)","var(--measured-purple)","var(--signal-yellow)"];
+  var current = 0, interacted = false;
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
   function select(i, focusTab) {
     current = i;
-    tabs.forEach(function (t, j) {
-      var on = j === i;
-      t.setAttribute("aria-selected", on ? "true" : "false");
-      t.tabIndex = on ? 0 : -1;
-    });
+    tabs.forEach(function (t, j) { var on = j===i; t.setAttribute("aria-selected", on?"true":"false"); t.tabIndex = on?0:-1; });
     panels.forEach(function (p, j) {
-      var on = j === i;
-      p.classList.toggle("active", on);
-      if (on) { p.hidden = false; } else { setTimeout(function () { if (!p.classList.contains("active")) p.hidden = true; }, 350); }
+      var on = j===i; p.classList.toggle("active", on);
+      if (on) { p.hidden = false; } else { setTimeout(function(){ if(!p.classList.contains("active")) p.hidden = true; }, 350); }
     });
-    frame.style.borderTopColor = "";
     frame.style.setProperty("--lens", lensColours[i]);
-    frame.style.setProperty("--lens-accent", lensColours[i] === "var(--signal-yellow)" || lensColours[i] === "var(--metric-blue)" ? "var(--vector-orange)" : lensColours[i]);
+    frame.style.setProperty("--lens-accent", (lensColours[i]==="var(--signal-yellow)"||lensColours[i]==="var(--metric-blue)")?"var(--vector-orange)":lensColours[i]);
     if (focusTab) tabs[i].focus();
   }
-
   tabs.forEach(function (tab, i) {
     tab.addEventListener("click", function () { interacted = true; select(i); });
     tab.addEventListener("keydown", function (e) {
       var n = null;
-      if (e.key === "ArrowRight") n = (current + 1) % tabs.length;
-      if (e.key === "ArrowLeft") n = (current - 1 + tabs.length) % tabs.length;
-      if (e.key === "Home") n = 0;
-      if (e.key === "End") n = tabs.length - 1;
-      if (n !== null) { e.preventDefault(); interacted = true; select(n, true); }
+      if (e.key==="ArrowRight") n=(current+1)%tabs.length;
+      if (e.key==="ArrowLeft") n=(current-1+tabs.length)%tabs.length;
+      if (e.key==="Home") n=0;
+      if (e.key==="End") n=tabs.length-1;
+      if (n!==null) { e.preventDefault(); interacted = true; select(n, true); }
     });
   });
-
-  // gentle auto-advance until first interaction
   if (!reduced) {
-    var timer = setInterval(function () {
-      if (interacted) { clearInterval(timer); return; }
-      select((current + 1) % tabs.length);
-    }, 4500);
+    var timer = setInterval(function () { if (interacted) { clearInterval(timer); return; } select((current+1)%tabs.length); }, 4500);
     document.addEventListener("pointerdown", function () { interacted = true; }, { once: true });
   }
 })();
 </script>
-
 </body>
 </html>
